@@ -25,14 +25,17 @@
 			var m = this._modules[moduleID];
 			if (m) {
 				if (m.instance && $.isFunction(m.instance.init) && $.isFunction(m.instance.destroy)) {
-					this.log(1, "Module '" + moduleID + "' Start : already started");
+					this.log(1, "Module '" + moduleID + "' Start : has already started");
 				}
 				else{
 					var instance = new m.constructor(new Sandbox(this, moduleID));
 					if (instance && $.isFunction(instance.init) && $.isFunction(instance.destroy)) {
 						m.instance = instance;
-						m.instance.init();
-						this.log(1, "Module [" + moduleID + "] Start: successfully started");
+
+						// TODO maybe it would be better that init() method returns something, for example: true - everything Okay, any other value - something went wrong
+                        m.instance.init();
+
+                        this.log(1, "Module [" + moduleID + "] Start: successfully started");
 						(callback || $.noop)();
 					} else {
 						this.log(1, "Module '" + moduleID + "' Start : FAILED : instance is undefined or doesn't have init or destroy methods");
@@ -88,7 +91,7 @@
 			if (typeof moduleID === 'string' && typeof constructor === 'function') {
 				this._pushModule(moduleID, constructor);
 			} else {
-				this.log(1, "Module '" + moduleID + "' Registration : FAILED : one or more arguments are of incorrect type");
+				this.log(1, "Module '" + moduleID + "' Registration : FAILED : one or more arguments are of unexpected type");
 			}
 			return this;
 		},
